@@ -2,11 +2,11 @@ import sys
 
 
 def main():
-    # TODO: Uncomment the code below to pass the first stage
     sys.stdout.write("$ ")
     # sys.stdout.flush()
+    # when switching from write to read stdout flushes
 
-    command = sys.stdin.readline()
+    command = sys.stdin.readline().strip()
     sys.stdout.write(f"{command}: command not found")
     sys.stdout.flush()
 
