@@ -9,9 +9,8 @@ def main():
         # when switching from write to read stdout flushes
 
         command = sys.stdin.readline().strip()
-        sys.stdout.write(f"{command}: command not found")
+        sys.stdout.write(f"{command}: command not found\n")
         sys.stdout.flush()
-
 
 if __name__ == "__main__":
     main()
