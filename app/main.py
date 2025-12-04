@@ -15,6 +15,8 @@ def get_folder_paths():
     return os.getenv("PATH").split(":")
 
 def get_file_paths(folder_path):
+    if not os.path.isdir(folder_path):
+        return []
     file_paths = []
     for f in os.listdir(folder_path):
         full_path = os.path.join(folder_path, f)
