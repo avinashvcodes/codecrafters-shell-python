@@ -11,8 +11,12 @@ def main():
         command = sys.stdin.readline().strip()
         if command == "exit":
             break
-        sys.stdout.write(f"{command}: command not found\n")
-        sys.stdout.flush()
+        if command.startswith("echo "):
+            sys.stdout.write(f"{command[5:]}\n")
+            sys.stdout.flush()
+        else:
+            sys.stdout.write(f"{command}: command not found\n")
+            sys.stdout.flush()
 
 if __name__ == "__main__":
     main()
