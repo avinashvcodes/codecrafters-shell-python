@@ -8,6 +8,7 @@ def main():
 
     command = sys.stdin.readline()
     sys.stdout.write(f"{command}: command not found")
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":
