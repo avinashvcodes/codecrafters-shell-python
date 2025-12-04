@@ -12,7 +12,7 @@ def echo(args):
     next_line()
 
 def get_folder_paths():
-    return os.getenv("PATH").split(";")
+    return os.getenv("PATH").split(":")
 
 def get_file_paths(folder_path):
     file_paths = []
