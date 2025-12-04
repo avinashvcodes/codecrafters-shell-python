@@ -9,6 +9,8 @@ def main():
         # when switching from write to read stdout flushes
 
         command = sys.stdin.readline().strip()
+        if command == "exit":
+            break
         sys.stdout.write(f"{command}: command not found\n")
         sys.stdout.flush()
 
