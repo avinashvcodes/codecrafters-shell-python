@@ -17,7 +17,7 @@ def get_folder_paths():
 def check_command(cmd):
     folder_paths = get_folder_paths()
     for folder_path in folder_paths:
-        file_path = folder_path + cmd
+        file_path = os.path.join(folder_path + cmd)
         if os.path.exists(file_path) and os.access(file_path, os.X_OK):
             return True, file_path
 
