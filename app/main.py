@@ -14,24 +14,12 @@ def echo(args):
 def get_folder_paths():
     return os.getenv("PATH").split(":")
 
-def get_file_paths(folder_path):
-    if not os.path.isdir(folder_path):
-        return []
-    file_paths = []
-    for f in os.listdir(folder_path):
-        full_path = os.path.join(folder_path, f)
-        if os.path.isfile(full_path):
-            file_paths.append((f, full_path))
-    return file_paths
-
 def check_command(cmd):
     folder_paths = get_folder_paths()
     for folder_path in folder_paths:
-        file_paths = get_file_paths(folder_path)
-
-        for file_path in file_paths:
-            if cmd == file_path[0].split(".")[0] and os.access(file_path[1], os.X_OK):
-                return True, file_path[1]
+        file_path = folder_path + cmd
+        if os.path.exists(file_path) and os.access(file_path[1], os.X_OK):
+            return True, file_path[1]
 
     return False, ""
 
