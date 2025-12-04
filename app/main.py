@@ -31,7 +31,7 @@ def check_command(cmd):
 
         for file_path in file_paths:
             if cmd == file_path[0].split(".")[0] and os.access(file_path[1], os.X_OK):
-                return True, file_path
+                return True, file_path[1]
 
     return False, ""
 
