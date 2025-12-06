@@ -1,41 +1,22 @@
 import sys
-import os
+import shutil
 
 BUILTIN_NAMES = {"exit", "echo", "type"}
 
-def next_line():
-    sys.stdout.write("\n")
-    sys.stdout.flush()
-
 def echo(args):
-    sys.stdout.write(" ".join(args))
-    next_line()
-
-def get_folder_paths():
-    return os.getenv("PATH").split(":")
-
-def check_command(cmd):
-    folder_paths = get_folder_paths()
-    for folder_path in folder_paths:
-        file_path = os.path.join(folder_path, cmd)
-        if os.path.exists(file_path) and os.access(file_path, os.X_OK):
-            return True, file_path
-
-    return False, ""
+    print(" ".join(args))
 
 def get_type(cmds):
     for cmd in cmds:
         if cmd in BUILTIN_NAMES:
-            sys.stdout.write(f"{cmd} is a shell builtin")
+            print(f"{cmd} is a shell builtin")
         else:
-            present, message = check_command(cmd)
+            path = shutil.which(cmd)
 
-            if present:
-                sys.stdout.write(f"{cmd} is {message}")
+            if path:
+                print(f"{cmd} is {path}")
             else:
-                sys.stdout.write(f"{cmd}: not found")
-        next_line()
-
+                print(f"{cmd}: not found")
 
 BUILTINS = {
     "exit": lambda *_: sys.exit(),
@@ -58,8 +39,7 @@ def main():
         try:
             BUILTINS[cmd](args)
         except KeyError:
-            sys.stdout.write(f"{cmd}: command not found")
-            next_line()
+            print(f"{cmd}: command not found")
 
 if __name__ == "__main__":
     main()
