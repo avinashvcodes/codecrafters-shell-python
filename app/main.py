@@ -1,5 +1,6 @@
 import sys
 import shutil
+import subprocess
 
 BUILTIN_NAMES = {"exit", "echo", "type"}
 
@@ -36,9 +37,12 @@ def main():
             continue
         cmd, *args = line.split(" ")
 
-        try:
+        if cmd in BUILTINS:
             BUILTINS[cmd](args)
-        except KeyError:
+        elif exe:= shutil.which(cmd):
+            with subprocess.Popen([exe]+args) as sp:
+                sp.wait()
+        else:
             print(f"{cmd}: command not found")
 
 if __name__ == "__main__":
