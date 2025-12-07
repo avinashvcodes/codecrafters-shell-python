@@ -1,8 +1,9 @@
 import sys
 import shutil
+import os
 import subprocess
 
-BUILTIN_NAMES = {"exit", "echo", "type"}
+BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
 
 def echo(args):
     print(" ".join(args))
@@ -21,6 +22,7 @@ def get_type(cmds):
 
 BUILTINS = {
     "exit": lambda *_: sys.exit(),
+    "pwd": lambda *_: print(os.getcwd()),
     "echo": echo,
     "type": get_type
 }
