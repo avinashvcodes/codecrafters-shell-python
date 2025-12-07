@@ -34,7 +34,7 @@ def get_type(cmds):
 BUILTINS = {
     "exit": lambda *_: sys.exit(),
     "pwd": lambda *_: print(os.getcwd()),
-    "cd": lambda *_: cd(),
+    "cd": lambda *_: cd(_),
     "echo": echo,
     "type": get_type
 }
