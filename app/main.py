@@ -5,6 +5,17 @@ import subprocess
 
 BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
 
+def cd(args):
+    path = args[0]
+    if len(args) > 1:
+        print("cd: too many arguments")
+        return
+    try:
+        os.chdir(path)
+    except OSError:
+        print(f"cd: {path}: No such file or directory")
+
+
 def echo(args):
     print(" ".join(args))
 
@@ -23,6 +34,7 @@ def get_type(cmds):
 BUILTINS = {
     "exit": lambda *_: sys.exit(),
     "pwd": lambda *_: print(os.getcwd()),
+    "cd": lambda *_: cd(),
     "echo": echo,
     "type": get_type
 }
