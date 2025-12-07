@@ -1,6 +1,6 @@
 import sys
 import shutil
-import shlex
+import util
 import os
 import subprocess
 
@@ -51,7 +51,7 @@ def main():
         line = sys.stdin.readline().strip()
         if not line:
             continue
-        cmd, *args = shlex.split(line)
+        cmd, *args = util.tokenize(line)
 
         if cmd in BUILTINS:
             BUILTINS[cmd](args)
