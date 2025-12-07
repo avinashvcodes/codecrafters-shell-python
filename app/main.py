@@ -1,5 +1,6 @@
 import sys
 import shutil
+import shlex
 import os
 import subprocess
 
@@ -10,6 +11,9 @@ def cd(args):
     if len(args) > 1:
         print("cd: too many arguments")
         return
+    if path == "~":
+        path = os.getenv("HOME")
+
     try:
         os.chdir(path)
     except OSError:
@@ -49,7 +53,7 @@ def main():
         line = sys.stdin.readline().strip()
         if not line:
             continue
-        cmd, *args = line.split(" ")
+        cmd, *args = shlex.split(line)
 
         if cmd in BUILTINS:
             BUILTINS[cmd](args)
