@@ -7,12 +7,10 @@ import subprocess
 BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
 
 def cd(args):
-    path = args[0]
+    path = os.path.expanduser(args[0])
     if len(args) > 1:
         print("cd: too many arguments")
         return
-    if path == "~":
-        path = os.getenv("HOME")
 
     try:
         os.chdir(path)
