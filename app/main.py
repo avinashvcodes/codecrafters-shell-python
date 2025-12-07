@@ -32,9 +32,9 @@ def get_type(cmds):
                 print(f"{cmd}: not found")
 
 BUILTINS = {
-    "exit": lambda *_: sys.exit(),
-    "pwd": lambda *_: print(os.getcwd()),
-    "cd": lambda *_: cd(_),
+    "exit": lambda _: sys.exit(),
+    "pwd": lambda _: print(os.getcwd()),
+    "cd": lambda _: cd(_),
     "echo": echo,
     "type": get_type
 }
