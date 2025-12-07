@@ -40,7 +40,7 @@ def main():
         if cmd in BUILTINS:
             BUILTINS[cmd](args)
         elif exe:= shutil.which(cmd):
-            with subprocess.Popen([cmd]+args) as sp:
+            with subprocess.Popen([cmd]+args, executable=exe) as sp:
                 sp.wait()
         else:
             print(f"{cmd}: command not found")
