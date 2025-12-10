@@ -22,8 +22,13 @@ def tokenize(s: str):
 
         word = ""
         while l<r:
-            if not in_single_quote and not in_double_quote and s[l].isspace():
-                break
+            if not in_single_quote and not in_double_quote:
+                if s[l].isspace():
+                    break
+                if s[l] == "\\" and l+1 < r:
+                    word+=s[l+1]
+                    l+=2
+                    continue
 
             if s[l] == "'" and not in_double_quote:
                 in_single_quote = not in_single_quote
@@ -82,7 +87,7 @@ def main():
     while True:
         sys.stdout.write("$ ")
         # sys.stdout.flush()
-        # when switching from write to read stdout flushes
+        # when switching from write to read stdout flushes automatically
 
         line = sys.stdin.readline().strip()
         if not line:
