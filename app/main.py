@@ -30,6 +30,12 @@ def tokenize(s: str):
                     l+=2
                     continue
 
+            if in_double_quote and s[l] == "\\" and l+1 < r and s[l+1] in ("\"", "\\", "$", "`"):
+                word+=s[l+1]
+                l+=2
+                continue
+
+
             if s[l] == "'" and not in_double_quote:
                 in_single_quote = not in_single_quote
 
