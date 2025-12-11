@@ -65,11 +65,11 @@ def parse(tokens: list[str]):
         if token in {"1>", ">"}:
             stdout, stderr = execute(cmd)
             if stderr:
-                print(stderr)
+                print(str(stderr))
             l+=1
             file = tokens[l]
             with open(file, "w", encoding="utf-8") as f:
-                f.write(stdout)
+                f.write(str(stdout))
             l+=1
             cmd = []
             continue
@@ -79,9 +79,9 @@ def parse(tokens: list[str]):
     if cmd:
         stdout, stderr = execute(cmd)
         if stdout:
-            print(stdout)
+            print(str(stdout))
         if stderr:
-            print(stderr)
+            print(str(stderr))
 
 
 
