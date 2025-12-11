@@ -3,55 +3,9 @@ import shutil
 import os
 import subprocess
 
+from app.tokenizer import tokenize
+
 BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
-
-def tokenize(s: str):
-
-    l, r = 0, len(s)
-    tokens = []
-    while l<r:
-
-        while l<r and s[l].isspace():
-            l+=1
-
-        if l==r:
-            break
-
-        in_single_quote = False
-        in_double_quote = False
-
-        word = ""
-        while l<r:
-            if not in_single_quote and not in_double_quote:
-                if s[l].isspace():
-                    break
-                if s[l] == "\\" and l+1 < r:
-                    word+=s[l+1]
-                    l+=2
-                    continue
-
-            if in_double_quote and s[l] == "\\" and l+1 < r and s[l+1] in ("\"", "\\", "$", "`"):
-                word+=s[l+1]
-                l+=2
-                continue
-
-
-            if s[l] == "'" and not in_double_quote:
-                in_single_quote = not in_single_quote
-
-            elif s[l] == '"' and not in_single_quote:
-                in_double_quote = not in_double_quote
-
-            else:
-                word+=s[l]
-
-            l+=1
-
-        if word:
-            tokens.append(word)
-
-    return tokens
-
 
 def cd(args):
     path = os.path.expanduser(args[0])
@@ -88,6 +42,46 @@ BUILTINS = {
     "type": get_type
 }
 
+def execute(cmd: list):
+
+    c, *args = cmd
+    if c in BUILTINS:
+        BUILTINS[c](args)
+        return None, None
+    if exe:= shutil.which(c):
+        with subprocess.Popen([c]+args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable=exe) as sp:
+            stdout, stderr = sp.communicate()
+            return stdout, stderr
+
+    print(f"{c}: command not found")
+    return None, None
+
+def parse(tokens: list[str]):
+
+    l, r = 0, len(tokens)
+    cmd = []
+    while l<r:
+        token = tokens[l]
+        if token in {"1>", ">"}:
+            stdout, stderr = execute(cmd)
+            print(stderr)
+            l+=1
+            file = tokens[l]
+            with open(file) as f:
+                f.write(stdout)
+            l+=1
+            cmd = []
+            continue
+        cmd.append(tokens[l])
+        l+=1
+
+    if cmd:
+        stdout, stderr = execute(cmd)
+        print(stdout)
+        print(stderr)
+
+
+
 def main():
 
     while True:
@@ -98,15 +92,9 @@ def main():
         line = sys.stdin.readline().strip()
         if not line:
             continue
-        cmd, *args = tokenize(line)
+        tokens = tokenize(line)
+        parse(tokens)
 
-        if cmd in BUILTINS:
-            BUILTINS[cmd](args)
-        elif exe:= shutil.which(cmd):
-            with subprocess.Popen([cmd]+args, executable=exe) as sp:
-                sp.wait()
-        else:
-            print(f"{cmd}: command not found")
 
 if __name__ == "__main__":
     main()
