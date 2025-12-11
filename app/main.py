@@ -10,29 +10,28 @@ BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
 def cd(args):
     path = os.path.expanduser(args[0])
     if len(args) > 1:
-        print("cd: too many arguments")
-        return
+        return None, "cd: too many arguments"
 
     try:
         os.chdir(path)
     except OSError:
-        print(f"cd: {path}: No such file or directory")
+        return None, f"cd: {path}: No such file or directory"
 
 
 def echo(args):
-    print(" ".join(args))
+    return " ".join(args), None
 
 def get_type(cmds):
     for cmd in cmds:
         if cmd in BUILTIN_NAMES:
-            print(f"{cmd} is a shell builtin")
-        else:
-            path = shutil.which(cmd)
+            return f"{cmd} is a shell builtin", None
 
-            if path:
-                print(f"{cmd} is {path}")
-            else:
-                print(f"{cmd}: not found")
+        path = shutil.which(cmd)
+
+        if path:
+            return f"{cmd} is {path}", None
+
+        return None, f"{cmd}: not found"
 
 BUILTINS = {
     "exit": lambda _: sys.exit(),
@@ -46,15 +45,14 @@ def execute(cmd: list):
 
     c, *args = cmd
     if c in BUILTINS:
-        BUILTINS[c](args)
-        return None, None
+        stdout, stderr = BUILTINS[c](args)
+        return stdout, stderr
     if exe:= shutil.which(c):
         with subprocess.Popen([c]+args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable=exe) as sp:
             stdout, stderr = sp.communicate()
             return stdout.decode().strip(), stderr.decode().strip()
 
-    print(f"{c}: command not found")
-    return None, None
+    return None, f"{c}: command not found"
 
 def parse(tokens: list[str]):
 
