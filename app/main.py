@@ -51,7 +51,7 @@ def execute(cmd: list):
     if exe:= shutil.which(c):
         with subprocess.Popen([c]+args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable=exe) as sp:
             stdout, stderr = sp.communicate()
-            return stdout, stderr
+            return stdout.decode(), stderr.decode()
 
     print(f"{c}: command not found")
     return None, None
@@ -65,11 +65,11 @@ def parse(tokens: list[str]):
         if token in {"1>", ">"}:
             stdout, stderr = execute(cmd)
             if stderr:
-                print(str(stderr))
+                print(stderr)
             l+=1
             file = tokens[l]
             with open(file, "w", encoding="utf-8") as f:
-                f.write(str(stdout))
+                f.write(stdout)
             l+=1
             cmd = []
             continue
@@ -79,9 +79,9 @@ def parse(tokens: list[str]):
     if cmd:
         stdout, stderr = execute(cmd)
         if stdout:
-            print(str(stdout))
+            print(stdout)
         if stderr:
-            print(str(stderr))
+            print(stderr)
 
 
 
