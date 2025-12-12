@@ -49,8 +49,11 @@ def execute(cmd: list):
         return stdout, stderr
     if exe:= shutil.which(c):
         with subprocess.Popen([c]+args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable=exe) as sp:
-            stdout, stderr = sp.communicate()
-            return stdout.decode().strip(), stderr.decode().strip()
+            output = sp.communicate()
+            if output:
+                stdout, stderr = output
+                return stdout.decode().strip(), stderr.decode().strip()
+            return None, None
 
     return None, f"{c}: command not found"
 
