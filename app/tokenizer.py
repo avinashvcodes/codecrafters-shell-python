@@ -51,29 +51,3 @@ def tokenize(s: str):
             tokens.append(word)
 
     return tokens
-
-# def lex(s: str) -> list[str]:
-
-#     tokens = []
-#     word = ""
-
-#     in_double_quotes = False
-#     in_single_quotes = False
-#     backslash = False
-
-#     for ch in s:
-
-#         if ch == "\\" and in_double_quotes:
-#             backslash = True
-#         elif ch == "'" and not in_double_quotes:
-#             in_single_quotes = not in_single_quotes
-#         elif ch == "\"" and not in_single_quotes:
-#             in_double_quotes = not in_double_quotes
-        
-#         word += ch
-#         if ch.isspace() and not in_double_quotes and not in_single_quotes:
-#             if word:
-#                 tokens.append(word)
-        
-        
-
