@@ -46,8 +46,11 @@ def execute(cmd: list):
 
     c, *args = cmd
     if c in BUILTINS:
-        stdout, stderr = BUILTINS[c](args)
-        return stdout, stderr
+        output = BUILTINS[c](args)
+        if output:
+            stdout, stderr = output
+            return stdout, stderr
+        return None, None
     if exe:= shutil.which(c):
         with subprocess.Popen([c]+args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable=exe) as sp:
             stdout, stderr = sp.communicate()
@@ -88,7 +91,6 @@ def main():
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
-        # when switching from write to read stdout flushes automatically
 
         line = sys.stdin.readline().strip()
         if not line:

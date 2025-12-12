@@ -19,10 +19,9 @@ def tokenize(s: str):
                 if s[l].isspace():
                     break
                 if s[l] == ">":
-                    if word:
-                        if word != "1":
-                            tokens.append(word)
-                        word = ""
+                    if word and word != "1":
+                        tokens.append(word)
+                    word = ""
                     tokens.append(">")
                     l+=1
                     break
