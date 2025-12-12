@@ -84,6 +84,7 @@ def redirect(operator, cmd, file):
         to_file = stdout
         to_terminal = stderr
     if operator == "2>":
+        print("yes")
         to_file = stderr
         to_terminal = stdout
     if to_terminal:
