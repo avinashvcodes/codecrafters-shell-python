@@ -14,6 +14,7 @@ def cd(args):
 
     try:
         os.chdir(path)
+        return None, None
     except OSError:
         return None, f"cd: {path}: No such file or directory"
 
@@ -49,11 +50,8 @@ def execute(cmd: list):
         return stdout, stderr
     if exe:= shutil.which(c):
         with subprocess.Popen([c]+args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable=exe) as sp:
-            output = sp.communicate()
-            if output:
-                stdout, stderr = output
-                return stdout.decode().strip(), stderr.decode().strip()
-            return None, None
+            stdout, stderr = sp.communicate()
+            return stdout.decode().strip(), stderr.decode().strip()
 
     return None, f"{c}: command not found"
 
