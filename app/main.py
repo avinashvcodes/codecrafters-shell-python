@@ -94,7 +94,6 @@ def main():
             continue
         tokens = tokenize(line)
         parse(tokens)
-        a+=1
 
 
 if __name__ == "__main__":
