@@ -17,15 +17,13 @@ def tokenize(s: str):
         while l<r:
             if not in_single_quote and not in_double_quote:
                 if s[l].isspace():
+                    l+=1
                     break
                 if s[l] == ">":
-                    if word:
-                        if word in ("1", "2"):
-                            tokens.append(word + ">")
-                        else:
-                            tokens.append(word)
-                            tokens.append(">")
-                    word = ""
+                    if word and word not in ("1", "2"):
+                        tokens.append(word)
+                        word = ""
+                    word+=">"
                     l+=1
                     break
                 if s[l] == "\\" and l+1 < r:
