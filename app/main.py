@@ -80,7 +80,8 @@ def parse(tokens: list[str]):
             print(stderr)
 
 def redirect(operator, cmd, file):
-    to_terminal = to_file = None
+    to_terminal = None
+    to_file = ""
     stdout, stderr = execute(cmd)
     if operator in ["1>", ">"]:
         to_file = stdout
@@ -90,9 +91,8 @@ def redirect(operator, cmd, file):
         to_terminal = stdout
     if to_terminal:
         print(to_terminal)
-    if to_file:
-        with open(file, "w", encoding="utf-8") as f:
-            f.write(to_file)
+    with open(file, "w", encoding="utf-8") as f:
+        f.write(to_file)
 
 def main():
     while True:
