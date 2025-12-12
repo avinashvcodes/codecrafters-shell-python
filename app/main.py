@@ -84,7 +84,7 @@ def parse(tokens: list[str]):
 
 
 def main():
-
+    a = 1
     while True:
         sys.stdout.write("$ ")
         # sys.stdout.flush()
@@ -94,8 +94,10 @@ def main():
         if not line:
             continue
         tokens = tokenize(line)
-        print(tokens)
+        if a==2:
+            print(tokens)
         parse(tokens)
+        a+=1
 
 
 if __name__ == "__main__":
