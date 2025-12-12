@@ -66,6 +66,7 @@ def parse(tokens: list[str]):
         token = tokens[l]
         if token in {"1>", ">", "2>"}:
             redirect(token, cmd, tokens[l+1])
+            l+=1
         cmd.append(tokens[l])
         l+=1
 
