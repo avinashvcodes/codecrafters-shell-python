@@ -86,7 +86,7 @@ def parse(tokens: list[str]):
 def main():
     while True:
         sys.stdout.write("$ ")
-        # sys.stdout.flush()
+        sys.stdout.flush()
         # when switching from write to read stdout flushes automatically
 
         line = sys.stdin.readline().strip()
