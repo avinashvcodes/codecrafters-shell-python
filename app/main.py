@@ -94,6 +94,7 @@ def main():
         if not line:
             continue
         tokens = tokenize(line)
+        print(tokens)
         parse(tokens)
 
 
