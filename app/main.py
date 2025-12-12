@@ -66,8 +66,10 @@ def parse(tokens: list[str]):
         token = tokens[l]
         if token in {"1>", ">", "2>"}:
             redirect(token, cmd, tokens[l+1])
-            l+=1
-        cmd.append(tokens[l])
+            l+=2
+            cmd = []
+        if l < r:
+            cmd.append(tokens[l])
         l+=1
 
     if cmd:
@@ -84,7 +86,6 @@ def redirect(operator, cmd, file):
         to_file = stdout
         to_terminal = stderr
     if operator == "2>":
-        print("yes")
         to_file = stderr
         to_terminal = stdout
     if to_terminal:
