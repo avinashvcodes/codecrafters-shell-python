@@ -19,10 +19,13 @@ def tokenize(s: str):
                 if s[l].isspace():
                     break
                 if s[l] == ">":
-                    if word and word != "1":
-                        tokens.append(word)
+                    if word:
+                        if word in ("1", "2"):
+                            tokens.append(word + ">")
+                        else:
+                            tokens.append(word)
+                            tokens.append(">")
                     word = ""
-                    tokens.append(">")
                     l+=1
                     break
                 if s[l] == "\\" and l+1 < r:

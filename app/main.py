@@ -64,17 +64,8 @@ def parse(tokens: list[str]):
     cmd = []
     while l<r:
         token = tokens[l]
-        if token in {"1>", ">"}:
-            stdout, stderr = execute(cmd)
-            if stderr:
-                print(stderr)
-            l+=1
-            file = tokens[l]
-            with open(file, "w", encoding="utf-8") as f:
-                f.write(stdout)
-            l+=1
-            cmd = []
-            continue
+        if token in {"1>", ">", "2>"}:
+            redirect(token, cmd, tokens[l+1])
         cmd.append(tokens[l])
         l+=1
 
@@ -85,7 +76,20 @@ def parse(tokens: list[str]):
         if stderr:
             print(stderr)
 
-
+def redirect(operator, cmd, file):
+    to_terminal = to_file = None
+    stdout, stderr = execute(cmd)
+    if operator in ["1>", ">"]:
+        to_file = stdout
+        to_terminal = stderr
+    if operator == "2>":
+        to_file = stderr
+        to_terminal = stdout
+    if to_terminal:
+        print(to_terminal)
+    if to_file:
+        with open(file, "w", encoding="utf-8") as f:
+            f.write(to_file)
 
 def main():
     while True:
