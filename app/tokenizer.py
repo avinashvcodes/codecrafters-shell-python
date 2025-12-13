@@ -23,8 +23,12 @@ def tokenize(s: str):
                     if word and word not in ("1", "2"):
                         tokens.append(word)
                         word = ""
-                    word+=">"
-                    l+=1
+                    if s[l+1] == ">":
+                        word+=">>"
+                        l+=2
+                    else:
+                        word+=">"
+                        l+=1
                     break
                 if s[l] == "\\" and l+1 < r:
                     word+=s[l+1]

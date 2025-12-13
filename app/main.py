@@ -64,7 +64,7 @@ def parse(tokens: list[str]):
     cmd = []
     while l<r:
         token = tokens[l]
-        if token in {"1>", ">", "2>"}:
+        if token in {"1>", ">", "2>", ">>", "1>>", "2>>"}:
             redirect(token, cmd, tokens[l+1])
             l+=2
             cmd = []
@@ -83,6 +83,10 @@ def redirect(operator, cmd, file):
     to_terminal = None
     to_file = None
     stdout, stderr = execute(cmd)
+    if operator in ["2>>", "1>>", ">>"]:
+        mode = "a"
+    else:
+        mode = "w"
     if operator in ["1>", ">"]:
         to_file = stdout
         to_terminal = stderr
@@ -91,7 +95,7 @@ def redirect(operator, cmd, file):
         to_terminal = stdout
     if to_terminal:
         print(to_terminal)
-    with open(file, "w", encoding="utf-8") as f:
+    with open(file, mode, encoding="utf-8") as f:
         if to_file:
             f.write(to_file)
 
