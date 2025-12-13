@@ -20,7 +20,7 @@ def cd(args):
 
 
 def echo(args):
-    return " ".join(args), None
+    return " ".join(args)+"\n", None
 
 def get_type(cmds):
     for cmd in cmds:
