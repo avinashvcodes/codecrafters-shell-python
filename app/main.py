@@ -87,10 +87,10 @@ def redirect(operator, cmd, file):
         mode = "a"
     else:
         mode = "w"
-    if operator in ["1>", ">"]:
+    if operator in ["1>", ">", "1>>", ">>"]:
         to_file = stdout
         to_terminal = stderr
-    if operator == "2>":
+    if operator in ["2>", "2>>"]:
         to_file = stderr
         to_terminal = stdout
     if to_terminal:
