@@ -30,7 +30,7 @@ def get_type(cmds):
         path = shutil.which(cmd)
 
         if path:
-            return f"{cmd} is {path}", None
+            return f"{cmd} is {path}\n", None
 
         return None, f"{cmd}: not found\n"
 
