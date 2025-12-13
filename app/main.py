@@ -10,13 +10,13 @@ BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
 def cd(args):
     path = os.path.expanduser(args[0])
     if len(args) > 1:
-        return None, "cd: too many arguments"
+        return None, "cd: too many arguments\n"
 
     try:
         os.chdir(path)
         return None, None
     except OSError:
-        return None, f"cd: {path}: No such file or directory"
+        return None, f"cd: {path}: No such file or directory\n"
 
 
 def echo(args):
@@ -25,14 +25,14 @@ def echo(args):
 def get_type(cmds):
     for cmd in cmds:
         if cmd in BUILTIN_NAMES:
-            return f"{cmd} is a shell builtin", None
+            return f"{cmd} is a shell builtin\n", None
 
         path = shutil.which(cmd)
 
         if path:
             return f"{cmd} is {path}", None
 
-        return None, f"{cmd}: not found"
+        return None, f"{cmd}: not found\n"
 
 BUILTINS = {
     "exit": lambda _: sys.exit(),
@@ -56,7 +56,7 @@ def execute(cmd: list):
             stdout, stderr = sp.communicate()
             return stdout.decode(), stderr.decode()
 
-    return None, f"{c}: command not found"
+    return None, f"{c}: command not found\n"
 
 def parse(tokens: list[str]):
 
@@ -75,13 +75,14 @@ def parse(tokens: list[str]):
     if cmd:
         stdout, stderr = execute(cmd)
         if stdout:
-            print(stdout)
+            print(stdout, end="")
         if stderr:
-            print(stderr)
+            print(stderr, end="")
 
 def redirect(operator, cmd, file):
     to_terminal = None
     to_file = None
+    terminal_stream = None
     stdout, stderr = execute(cmd)
     if operator in ["2>>", "1>>", ">>"]:
         mode = "a"
@@ -90,11 +91,14 @@ def redirect(operator, cmd, file):
     if operator in ["1>", ">", "1>>", ">>"]:
         to_file = stdout
         to_terminal = stderr
+        terminal_stream = sys.stderr
     if operator in ["2>", "2>>"]:
         to_file = stderr
         to_terminal = stdout
+        terminal_stream = sys.stdout
     if to_terminal:
-        print(to_terminal)
+        terminal_stream.write(to_terminal)
+        terminal_stream.flush()
     with open(file, mode, encoding="utf-8") as f:
         if to_file:
             f.write(to_file)
