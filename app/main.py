@@ -109,7 +109,7 @@ def redirect(operator, cmd, file):
 def completer(text, state):
     options = [cmd for cmd in BUILTINS if cmd.startswith(text)]
     if state < len(options):
-        return options[state]
+        return options[state]+" "
     return None
 
 readline.set_completer(completer)
@@ -120,7 +120,7 @@ def main():
         sys.stdout.write("$ ")
         sys.stdout.flush()
 
-        line = sys.stdin.readline().strip()
+        line = input().strip()
         if not line:
             continue
         tokens = tokenize(line)
