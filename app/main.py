@@ -132,7 +132,13 @@ def completer(text, state):
         return options[state]
     return None
 
+def display_matches(substitution, matches, longest_match_length):
+    sys.stdout.write("\n" + "  ".join(matches) + "\n")
+    sys.stdout.write("$ " + readline.get_line_buffer())
+    sys.stdout.flush()
+
 readline.set_completer(completer)
+readline.set_completion_display_matches_hook(display_matches)
 readline.parse_and_bind("tab: complete")
 readline.set_completion_append_character(" ")
 
