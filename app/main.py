@@ -129,7 +129,7 @@ shell = Shell()
 def completer(text, state):
     options = [cmd for cmd in shell.get_executables() if cmd.startswith(text)]
     if state < len(options):
-        return options[state]
+        return options[state] + " "
     return None
 
 def display_matches(substitution, matches, longest_match_length):
