@@ -2,6 +2,7 @@ import sys
 import shutil
 import os
 import subprocess
+import readline
 
 from app.tokenizer import tokenize
 
@@ -34,9 +35,12 @@ def get_type(cmds):
 
         return None, f"{cmd}: not found\n"
 
+def pwd(args):
+    return os.getcwd() + "\n", None
+
 BUILTINS = {
     "exit": lambda _: sys.exit(),
-    "pwd": lambda _: print(os.getcwd()),
+    "pwd": pwd,
     "cd": cd,
     "echo": echo,
     "type": get_type
@@ -75,9 +79,9 @@ def parse(tokens: list[str]):
     if cmd:
         stdout, stderr = execute(cmd)
         if stdout:
-            print(stdout, end="")
+            sys.stdout.write(stdout)
         if stderr:
-            print(stderr, end="")
+            sys.stderr.write(stderr)
 
 def redirect(operator, cmd, file):
     to_terminal = None
@@ -98,10 +102,18 @@ def redirect(operator, cmd, file):
         terminal_stream = sys.stdout
     if to_terminal:
         terminal_stream.write(to_terminal)
-        terminal_stream.flush()
     with open(file, mode, encoding="utf-8") as f:
         if to_file:
             f.write(to_file)
+
+def completer(text, state):
+    options = [cmd for cmd in BUILTINS if cmd.startswith(text)]
+    if state < len(options):
+        return options[state]
+    return None
+
+readline.set_completer(completer)
+readline.parse_and_bind("tab: complete")
 
 def main():
     while True:
