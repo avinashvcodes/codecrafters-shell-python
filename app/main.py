@@ -21,7 +21,7 @@ class Shell:
             if os.path.isdir(directory):
                 for file in os.listdir(directory):
                     full_path = os.path.join(directory, file)
-                    if os.access(full_path, os.X_OK) and not os.path.isdir(full_path):
+                    if os.access(full_path, os.X_OK) and os.path.isfile(full_path):
                         executables.add(file)
 
         self._exec_cache = executables
@@ -129,11 +129,12 @@ shell = Shell()
 def completer(text, state):
     options = [cmd for cmd in shell.get_executables() if cmd.startswith(text)]
     if state < len(options):
-        return options[state]+" "
+        return options[state]
     return None
 
 readline.set_completer(completer)
 readline.parse_and_bind("tab: complete")
+readline.set_completion_append_character(" ")
 
 def main():
     while True:
