@@ -8,6 +8,25 @@ from app.tokenizer import tokenize
 
 BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
 
+class Shell:
+    def __init__(self):
+        self._exec_cache = None
+
+    def get_executables(self):
+        if self._exec_cache is not None:
+            return self._exec_cache
+
+        executables = set(BUILTIN_NAMES)
+        for directory in os.getenv("PATH", "").split(os.pathsep):
+            if os.path.isdir(directory):
+                for file in os.listdir(directory):
+                    full_path = os.path.join(directory, file)
+                    if os.access(full_path, os.X_OK) and not os.path.isdir(full_path):
+                        executables.add(file)
+
+        self._exec_cache = executables
+        return executables
+
 def cd(args):
     path = os.path.expanduser(args[0])
     if len(args) > 1:
@@ -106,8 +125,9 @@ def redirect(operator, cmd, file):
         if to_file:
             f.write(to_file)
 
+shell = Shell()
 def completer(text, state):
-    options = [cmd for cmd in BUILTINS if cmd.startswith(text)]
+    options = [cmd for cmd in shell.get_executables() if cmd.startswith(text)]
     if state < len(options):
         return options[state]+" "
     return None
