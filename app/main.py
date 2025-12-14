@@ -133,7 +133,7 @@ def completer(text, state):
     return None
 
 def display_matches(substitution, matches, longest_match_length):
-    sys.stdout.write("\n" + "  ".join(matches) + "\n")
+    sys.stdout.write("\n" + " ".join(matches) + "\n")
     sys.stdout.write("$ " + readline.get_line_buffer())
     sys.stdout.flush()
 
