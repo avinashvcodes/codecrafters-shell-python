@@ -140,7 +140,6 @@ def display_matches(substitution, matches, longest_match_length):
 readline.set_completer(completer)
 readline.set_completion_display_matches_hook(display_matches)
 readline.parse_and_bind("tab: complete")
-readline.set_completion_append_character(" ")
 
 def main():
     while True:
