@@ -21,7 +21,7 @@ def completer(text, state):
         CompletionState.tab_count = 0
 
     matches = [cmd for cmd in shell.get_executables() if cmd.startswith(text)]
-
+    print(matches)
     if CompletionState.tab_count == 0 and state == 0:
         CompletionState.tab_count += 1
         if len(matches) == 1:
