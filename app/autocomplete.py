@@ -40,7 +40,7 @@ def completer(text, state):
 def get_common_prefix(text, matches):
     prefix = matches[0]
     l = len(text)
-
+    print(prefix)
     for i in range(1, len(matches)):
         if l > len(matches[i]):
             prefix = prefix[:len(matches[i])]
