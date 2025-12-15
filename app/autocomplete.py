@@ -21,7 +21,6 @@ def completer(text, state):
         CompletionState.tab_count = 0
 
     matches = [cmd for cmd in shell.get_executables() if cmd.startswith(text)]
-    print(matches)
     if CompletionState.tab_count == 0 and state == 0:
         CompletionState.tab_count += 1
         if len(matches) == 1:
@@ -29,7 +28,7 @@ def completer(text, state):
             return matches[0] + " "
         sys.stdout.write("\a")
         sys.stdout.flush()
-        return text
+        return get_common_prefix(text, matches)
     if CompletionState.tab_count == 1 and state == 0:
         CompletionState.tab_count = 0
         if matches:
@@ -37,6 +36,22 @@ def completer(text, state):
         return text
 
     return None
+
+def get_common_prefix(text, matches):
+    prefix = matches[0]
+    l = len(text)
+
+    for i in range(1, len(matches)):
+        if l > len(matches[i]):
+            prefix = prefix[:len(matches[i])]
+        else:
+            for j in range(l, len(prefix)):
+                if prefix[j] != matches[i][j]:
+                    prefix = prefix[:j]
+                    break
+        if prefix == text:
+            return text
+    return prefix
 
 def display_matches(matches, text):
     sys.stdout.write("\n" + "  ".join(matches) + "\n")
