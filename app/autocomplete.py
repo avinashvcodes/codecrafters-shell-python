@@ -52,7 +52,7 @@ def get_common_prefix(text, matches):
     return prefix
 
 def display_matches(matches, text):
-    sys.stdout.write("\n" + "  ".join(matches) + "\n")
+    sys.stdout.write("\n" + "  ".join(sorted(matches)) + "\n")
     sys.stdout.write("$ " + text)
     sys.stdout.flush()
 
