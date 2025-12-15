@@ -1,0 +1,20 @@
+import os
+from app.constants import BUILTIN_NAMES
+class Shell:
+    def __init__(self):
+        self._exec_cache = None
+
+    def get_executables(self):
+        if self._exec_cache is not None:
+            return self._exec_cache
+
+        executables = set(BUILTIN_NAMES)
+        for directory in os.getenv("PATH", "").split(os.pathsep):
+            if os.path.isdir(directory):
+                for file in os.listdir(directory):
+                    full_path = os.path.join(directory, file)
+                    if os.access(full_path, os.X_OK) and os.path.isfile(full_path):
+                        executables.add(file)
+
+        self._exec_cache = executables
+        return executables

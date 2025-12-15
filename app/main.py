@@ -2,30 +2,11 @@ import sys
 import shutil
 import os
 import subprocess
-import readline
+from app.autocomplete import setup_autocomplete
+from app.constants import BUILTIN_NAMES
 
 from app.tokenizer import tokenize
 
-BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
-
-class Shell:
-    def __init__(self):
-        self._exec_cache = None
-
-    def get_executables(self):
-        if self._exec_cache is not None:
-            return self._exec_cache
-
-        executables = set(BUILTIN_NAMES)
-        for directory in os.getenv("PATH", "").split(os.pathsep):
-            if os.path.isdir(directory):
-                for file in os.listdir(directory):
-                    full_path = os.path.join(directory, file)
-                    if os.access(full_path, os.X_OK) and os.path.isfile(full_path):
-                        executables.add(file)
-
-        self._exec_cache = executables
-        return executables
 
 def cd(args):
     path = os.path.expanduser(args[0])
@@ -125,23 +106,9 @@ def redirect(operator, cmd, file):
         if to_file:
             f.write(to_file)
 
-shell = Shell()
-def completer(text, state):
-    options = [cmd for cmd in shell.get_executables() if cmd.startswith(text)]
-    if state < len(options):
-        return options[state] + " "
-    return None
-
-def display_matches(substitution, matches, longest_match_length):
-    sys.stdout.write("\n" + " ".join(matches) + "\n")
-    sys.stdout.write("$ " + readline.get_line_buffer())
-    sys.stdout.flush()
-
-readline.set_completer(completer)
-readline.set_completion_display_matches_hook(display_matches)
-readline.parse_and_bind("tab: complete")
 
 def main():
+    setup_autocomplete()
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
