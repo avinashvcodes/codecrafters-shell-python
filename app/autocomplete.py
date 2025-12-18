@@ -40,7 +40,7 @@ def completer(text, state):
 
 def display_matches(matches, full_line):
     sys.stdout.write("\n" + "  ".join(sorted(matches)) + "\n")
-    sys.stdout.write(full_line)
+    sys.stdout.write("$ " + full_line)
     sys.stdout.flush()
 
 def setup_autocomplete():
