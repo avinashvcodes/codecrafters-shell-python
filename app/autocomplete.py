@@ -14,6 +14,7 @@ shell = Shell()
 ## readline’s internal completion logic and managing TAB state manually
 
 def completer(text, state):
+    # full_line = readline.get_line_buffer()
     if state > 0:
         return None
     if CompletionState.last_text != text:
@@ -37,28 +38,29 @@ def completer(text, state):
 
     return None
 
-# def get_common_prefix(text, matches):
-#     if not matches:
-#         return text
-#     prefix = matches[0]
-#     l = len(text)
-#     for i in range(1, len(matches)):
-#         if len(prefix) > len(matches[i]):
-#             prefix = prefix[:len(matches[i])]
-#         for j in range(l, len(prefix)):
-#             if prefix[j] != matches[i][j]:
-#                 prefix = prefix[:j]
-#                 break
-#         if prefix == text:
-#             return text
-#     return prefix
 
 def display_matches(matches, text):
     sys.stdout.write("\n" + "  ".join(sorted(matches)) + "\n")
-    sys.stdout.write("$ " + text)
-    sys.stdout.flush()
+    # sys.stdout.write("$ " + text)
+    # sys.stdout.flush()
 
 def setup_autocomplete():
     readline.set_completer(completer)
     readline.set_completer_delims(" \t\n")
     readline.parse_and_bind("tab: complete")
+
+# if len(matches) > 100:
+#             sys.stdout.write(f"Display all {len(matches)} possibilities? (y or n)")
+#             while True:
+#                 c = sys.stdin.read(1)
+#                 if c in {"y", "n"}:
+#                     break
+#                 sys.stdout.write("\a")
+#                 sys.stdout.flush()
+#             if c == "y":
+#                 display_matches(matches, text)
+#             else:
+#                 sys.stdout.write("$ " + text)
+#                 sys.stdout.flush()
+#         else:
+#             display_matches(matches, text)
