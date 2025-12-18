@@ -1,6 +1,7 @@
 import readline
 import sys
 from app.shell import Shell
+from app.util import read_single_char_noecho
 from dataclasses import dataclass
 
 @dataclass
@@ -22,6 +23,8 @@ def completer(text, state):
         CompletionState.tab_count = 0
     trie = shell.get_trie()
     matches = trie.all_words_with_prefix(text)
+    if not matches:
+        return None
     if CompletionState.tab_count == 0 and state == 0:
         CompletionState.tab_count += 1
         if len(matches) == 1:
@@ -32,7 +35,22 @@ def completer(text, state):
         return trie.lcp(text)
     if CompletionState.tab_count == 1 and state == 0:
         CompletionState.tab_count = 0
-        if matches:
+        if len(matches) > 100:
+            sys.stdout.write(f"Display all {len(matches)} possibilities? (y or n)")
+            sys.stdout.flush()
+
+            while True:
+                c = read_single_char_noecho().lower()
+                if c in ("y", "n"):
+                    break
+                sys.stdout.write("\a")
+                sys.stdout.flush()
+            if c == "y":
+                display_matches(matches, full_line)
+            else:
+                sys.stdout.write("\n")
+                sys.stdout.flush()
+        else:
             display_matches(matches, full_line)
 
     return None
@@ -47,19 +65,3 @@ def setup_autocomplete():
     readline.set_completer(completer)
     readline.set_completer_delims(" \t\n")
     readline.parse_and_bind("tab: complete")
-
-# if len(matches) > 100:
-#             sys.stdout.write(f"Display all {len(matches)} possibilities? (y or n)")
-#             while True:
-#                 c = sys.stdin.read(1)
-#                 if c in {"y", "n"}:
-#                     break
-#                 sys.stdout.write("\a")
-#                 sys.stdout.flush()
-#             if c == "y":
-#                 display_matches(matches, text)
-#             else:
-#                 sys.stdout.write("$ " + text)
-#                 sys.stdout.flush()
-#         else:
-#             display_matches(matches, text)
