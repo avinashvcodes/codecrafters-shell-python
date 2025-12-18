@@ -45,7 +45,7 @@ class Trie:
         node = self.get_prefix_node(prefix)
         if not node:
             return prefix
-        while len(node.children)==1:
+        while len(node.children)==1 and node.is_end_of_word is False:
             char = next(iter(node.children))
             prefix += char
             node = node.children[char]
