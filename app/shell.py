@@ -1,8 +1,10 @@
 import os
 from app.constants import BUILTIN_NAMES
+from app.trie import Trie
 class Shell:
     def __init__(self):
         self._exec_cache = None
+        self.trie = None
 
     def get_executables(self):
         if self._exec_cache is not None:
@@ -18,3 +20,10 @@ class Shell:
 
         self._exec_cache = executables
         return executables
+
+    def get_trie(self):
+        if self.trie is None:
+            self.trie = Trie()
+            for cmd in self.get_executables():
+                self.trie.insert(cmd)
+        return self.trie
