@@ -14,7 +14,7 @@ shell = Shell()
 ## readline’s internal completion logic and managing TAB state manually
 
 def completer(text, state):
-    # full_line = readline.get_line_buffer()
+    full_line = readline.get_line_buffer()
     if state > 0:
         return None
     if CompletionState.last_text != text:
@@ -33,16 +33,15 @@ def completer(text, state):
     if CompletionState.tab_count == 1 and state == 0:
         CompletionState.tab_count = 0
         if matches:
-            display_matches(matches, text)
-        return text
+            display_matches(matches, full_line)
 
     return None
 
 
-def display_matches(matches, text):
+def display_matches(matches, full_line):
     sys.stdout.write("\n" + "  ".join(sorted(matches)) + "\n")
-    # sys.stdout.write("$ " + text)
-    # sys.stdout.flush()
+    sys.stdout.write(full_line)
+    sys.stdout.flush()
 
 def setup_autocomplete():
     readline.set_completer(completer)
