@@ -17,8 +17,8 @@ def cd(args):
     try:
         os.chdir(path)
         return None, None
-    except OSError:
-        return None, f"cd: {path}: No such file or directory\n"
+    except OSError as e:
+        return None, f"cd: {e.strerror}\n"
 
 
 def echo(args):
