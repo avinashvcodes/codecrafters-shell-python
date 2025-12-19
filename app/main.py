@@ -2,9 +2,10 @@ import sys
 import shutil
 import os
 import subprocess
+from collections import deque
+
 from app.autocomplete import setup_autocomplete
 from app.constants import BUILTIN_NAMES
-
 from app.tokenizer import tokenize
 
 
@@ -72,6 +73,18 @@ def parse(tokens: list[str]):
             redirect(token, cmd, tokens[l+1])
             l+=2
             cmd = []
+        if token == "|":
+            cmds = [cmd]
+            while l < r and tokens[l] == "|":
+                l+=1
+                cmd2 = []
+                while l < r and tokens[l] not in {"|", "1>", ">", "2>", ">>", "1>>", "2>>"}:
+                    cmd2.append(tokens[l])
+                    l+=1
+                cmds.append(cmd2)
+            pipe(cmds)
+            cmd = []
+            continue
         if l < r:
             cmd.append(tokens[l])
         l+=1
@@ -105,6 +118,42 @@ def redirect(operator, cmd, file):
     with open(file, mode, encoding="utf-8") as f:
         if to_file:
             f.write(to_file)
+
+def pipe(cmds):
+    processes = []
+    prev_r = None
+    for i in range(len(cmds)-1):
+        cmd = cmds[i]
+        r, w = os.pipe()
+        pid = os.fork()
+        processes.append(pid)
+        if pid == 0:
+            os.dup2(w, 1)
+            if prev_r is not None:
+                os.dup2(prev_r, 0)
+                os.close(prev_r)
+            os.close(r)
+            os.close(w)
+            os.execvp(cmd[0], cmd)
+        os.close(w)
+        if prev_r is not None:
+            os.close(prev_r)
+        prev_r = r
+
+    cmd = cmds[-1]
+    pid = os.fork()
+    processes.append(pid)
+    if pid == 0:
+        if prev_r is not None:
+            os.dup2(prev_r, 0)
+            os.close(prev_r)
+        os.execvp(cmd[0], cmd)
+
+    if prev_r is not None:
+        os.close(prev_r)
+
+    for pid in processes:
+        os.waitpid(pid, 0)
 
 
 def main():
