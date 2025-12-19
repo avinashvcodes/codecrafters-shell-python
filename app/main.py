@@ -18,7 +18,7 @@ def cd(args):
         os.chdir(path)
         return None, None
     except OSError as e:
-        return None, f"cd: {e.strerror}\n"
+        return None, f"cd: {path}: {os.strerror(e.errno)}\n"
 
 
 def echo(args):
