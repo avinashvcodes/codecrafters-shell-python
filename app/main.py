@@ -2,7 +2,6 @@ import sys
 import shutil
 import os
 import subprocess
-from collections import deque
 
 from app.autocomplete import setup_autocomplete
 from app.constants import BUILTIN_NAMES
@@ -17,8 +16,8 @@ def cd(args):
     try:
         os.chdir(path)
         return None, None
-    except OSError as e:
-        return None, f"cd: {path}: {os.strerror(e.errno)}\n"
+    except OSError:
+        return None, f"cd: {path}: No such file or directory\n"
 
 
 def echo(args):
