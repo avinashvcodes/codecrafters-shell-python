@@ -62,6 +62,19 @@ def execute(cmd: list):
 
     return None, f"{c}: command not found\n"
 
+def execute_buildins(cmd: list):
+    c, *args = cmd
+    if c in BUILTINS:
+        output = BUILTINS[c](args)
+        if output:
+            stdout, stderr = output
+            if stderr:
+                sys.stderr.write(stderr)
+            if stdout:
+                sys.stdout.write(stdout)
+
+    sys.stderr.write(f"{c}: command not found\n")
+
 def parse(tokens: list[str]):
 
     l, r = 0, len(tokens)
@@ -124,6 +137,22 @@ def pipe(cmds):
     for i in range(len(cmds)-1):
         cmd = cmds[i]
         r, w = os.pipe()
+        if cmd[0] in BUILTIN_NAMES:
+            stdin_ = os.dup(0)
+            stdout_ = os.dup(1)
+            if prev_r is not None:
+                os.dup2(prev_r, 0)
+                os.close(prev_r)
+            os.dup2(w, 1)
+            os.close(w)
+            execute_buildins(cmd)
+            os.dup2(stdin_, 0)
+            os.dup2(stdout_, 1)
+            os.close(stdin_)
+            os.close(stdout_)
+            prev_r = r
+            continue
+
         pid = os.fork()
         processes.append(pid)
         if pid == 0:
