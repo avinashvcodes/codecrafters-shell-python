@@ -72,8 +72,8 @@ def execute_buildins(cmd: list):
                 sys.stderr.write(stderr)
             if stdout:
                 sys.stdout.write(stdout)
-
-    sys.stderr.write(f"{c}: command not found\n")
+    else:
+        sys.stderr.write(f"{c}: command not found\n")
 
 def parse(tokens: list[str]):
 
