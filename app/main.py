@@ -169,6 +169,15 @@ def pipe(cmds):
         prev_r = r
 
     cmd = cmds[-1]
+    if cmd[0] in BUILTIN_NAMES:
+        stdin_ = os.dup(0)
+        if prev_r is not None:
+            os.dup2(prev_r, 0)
+            os.close(prev_r)
+        execute_buildins(cmd)
+        os.dup2(stdin_, 0)
+        os.close(stdin_)
+        return  # Exit cause the last is a built-in command
     pid = os.fork()
     processes.append(pid)
     if pid == 0:
