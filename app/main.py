@@ -2,6 +2,7 @@ import sys
 import shutil
 import os
 import subprocess
+import signal
 
 from app.autocomplete import setup_autocomplete
 from app.constants import BUILTIN_NAMES
@@ -9,6 +10,11 @@ from app.tokenizer import tokenize
 from app.shell import Shell
 
 shell = Shell()
+def on_signal(signum, frame):
+    shell.flush_history()
+    sys.exit(0)
+signal.signal(signal.SIGTERM, on_signal)
+signal.signal(signal.SIGINT, on_signal)
 
 def cd(args):
     path = os.path.expanduser(args[0])
@@ -41,7 +47,7 @@ def pwd(args):
     return os.getcwd() + "\n", None
 
 def get_history(args):
-    pass
+    return shell.get_history(), None
 
 BUILTINS = {
     "exit": lambda _: sys.exit(),
@@ -201,16 +207,19 @@ def pipe(cmds):
 
 def main():
     setup_autocomplete()
-    while True:
-        sys.stdout.write("$ ")
-        sys.stdout.flush()
+    try:
+        while True:
+            sys.stdout.write("$ ")
+            sys.stdout.flush()
 
-        line = input().strip()
-        if not line:
-            continue
-        tokens = tokenize(line)
-        parse(tokens)
-
+            line = input().strip()
+            if not line:
+                continue
+            shell.add_history(line)
+            tokens = tokenize(line)
+            parse(tokens)
+    finally:
+        shell.flush_history()
 
 if __name__ == "__main__":
     main()

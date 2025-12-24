@@ -1,13 +1,16 @@
 import os
 from app.constants import BUILTIN_NAMES
 from app.trie import Trie
+
+history_file_path = os.path.expanduser("~/.pyshell_history")
+
 class Shell:
 
     __instance = None
 
     def __new__(cls):
         if cls.__instance is None:
-            cls.__instance = super(Shell, cls).__new__(cls)
+            cls.__instance = super().__new__(cls)
         return cls.__instance
 
     def __init__(self):
@@ -17,8 +20,16 @@ class Shell:
 
         self._exec_cache = None
         self.trie = None
-        self.history = []
+        self.history = self.load_history()
+        self._history_start_index = len(self.history)
 
+    def load_history(self):
+        history = []
+        if os.path.exists(history_file_path):
+            with open(history_file_path, "r", encoding='utf-8') as f:
+                for line in f:
+                    history.append(line.strip("\n"))
+        return history
 
     def get_executables(self):
         if self._exec_cache is not None:
@@ -46,16 +57,15 @@ class Shell:
         self.history.append(command)
 
     def flush_history(self):
-        with open(os.path.expanduser("~/.pyshell_history"), "a", encoding='utf-8') as f:
-            for command in self.history:
+        if not self.history:
+            return
+        with open(history_file_path, "a", encoding='utf-8') as f:
+            for command in self.history[self._history_start_index:]:
                 f.write(command + "\n")
-        self.history = []
+        self.history.clear()
 
-    def get_history(self):
-        self.flush_history()
-        with open(os.path.expanduser("~/.pyshell_history"), "r", encoding='utf-8') as f:
-            line_no = 1
-            for line in f:
-                result += f"{line_no}\t{line}"
-                line_no += 1
-        return result.strip("\n")
+    def get_history(self, width=5):
+        lines = []
+        for i, command in enumerate(self.history, start=1):
+            lines.append(f"{i:>{width}}  {command}")
+        return "\n".join(lines) + "\n"
