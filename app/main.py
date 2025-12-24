@@ -47,7 +47,8 @@ def pwd(args):
     return os.getcwd() + "\n", None
 
 def get_history(args):
-    return shell.get_history(), None
+    n = args[0] if args else 0
+    return shell.get_history(n), None
 
 BUILTINS = {
     "exit": lambda _: sys.exit(),

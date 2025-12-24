@@ -64,8 +64,12 @@ class Shell:
                 f.write(command + "\n")
         self.history.clear()
 
-    def get_history(self, width=5):
+    def get_history(self, n=0, width=5):
         lines = []
-        for i, command in enumerate(self.history, start=1):
-            lines.append(f"{i:>{width}}  {command}")
+        total = len(self.history)
+        start = max(total-n, 0) if n > 0 else 0
+        while start < len(self.history):
+            command = self.history[start]
+            start+=1
+            lines.append(f"{start:>{width}}  {command}")
         return "\n".join(lines) + "\n"
