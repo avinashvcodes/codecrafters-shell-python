@@ -6,7 +6,9 @@ import subprocess
 from app.autocomplete import setup_autocomplete
 from app.constants import BUILTIN_NAMES
 from app.tokenizer import tokenize
+from app.shell import Shell
 
+shell = Shell()
 
 def cd(args):
     path = os.path.expanduser(args[0])
@@ -39,7 +41,7 @@ def pwd(args):
     return os.getcwd() + "\n", None
 
 def get_history(args):
-    
+    pass
 
 BUILTINS = {
     "exit": lambda _: sys.exit(),

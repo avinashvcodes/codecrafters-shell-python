@@ -8,11 +8,17 @@ class Shell:
     def __new__(cls):
         if cls.__instance is None:
             cls.__instance = super(Shell, cls).__new__(cls)
+        return cls.__instance
 
     def __init__(self):
+        if getattr(self, "_declared", False):
+            return
+        self._declared = True
+
         self._exec_cache = None
         self.trie = None
         self.history = []
+
 
     def get_executables(self):
         if self._exec_cache is not None:
@@ -35,3 +41,21 @@ class Shell:
             for cmd in self.get_executables():
                 self.trie.insert(cmd)
         return self.trie
+
+    def add_history(self, command: str):
+        self.history.append(command)
+
+    def flush_history(self):
+        with open(os.path.expanduser("~/.pyshell_history"), "a", encoding='utf-8') as f:
+            for command in self.history:
+                f.write(command + "\n")
+        self.history = []
+
+    def get_history(self):
+        self.flush_history()
+        with open(os.path.expanduser("~/.pyshell_history"), "r", encoding='utf-8') as f:
+            line_no = 1
+            for line in f:
+                result += f"{line_no}\t{line}"
+                line_no += 1
+        return result.strip("\n")
