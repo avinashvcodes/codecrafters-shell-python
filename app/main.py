@@ -47,7 +47,10 @@ def pwd(args):
     return os.getcwd() + "\n", None
 
 def get_history(args):
-    n = args[0] if args else 0
+    try:
+        n = int(args[0]) if args else 0
+    except ValueError:
+        return None, f"history: {n}: numeric argument required\n"
     return shell.get_history(n), None
 
 BUILTINS = {
