@@ -1,1 +1,1 @@
-BUILTIN_NAMES = {"exit", "echo", "type", "pwd"}
+BUILTIN_NAMES = {"exit", "echo", "type", "pwd", "history"}

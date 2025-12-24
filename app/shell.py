@@ -2,9 +2,17 @@ import os
 from app.constants import BUILTIN_NAMES
 from app.trie import Trie
 class Shell:
+
+    __instance = None
+
+    def __new__(cls):
+        if cls.__instance is None:
+            cls.__instance = super(Shell, cls).__new__(cls)
+
     def __init__(self):
         self._exec_cache = None
         self.trie = None
+        self.history = []
 
     def get_executables(self):
         if self._exec_cache is not None:

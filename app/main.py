@@ -38,12 +38,16 @@ def get_type(cmds):
 def pwd(args):
     return os.getcwd() + "\n", None
 
+def get_history(args):
+    
+
 BUILTINS = {
     "exit": lambda _: sys.exit(),
     "pwd": pwd,
     "cd": cd,
     "echo": echo,
-    "type": get_type
+    "type": get_type,
+    "history": get_history
 }
 
 def execute(cmd: list):
