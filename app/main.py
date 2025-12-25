@@ -59,6 +59,9 @@ def get_history(args):
             if args[0] == '-w':
                 readline.write_history_file(file)
                 return None, None
+            if args[0] == '-a':
+                readline.append_history_file(file)
+                return None, None
         n = int(args[0]) if args else 0
     except ValueError:
         return None, f"history: {args[0]}: numeric argument required\n"
