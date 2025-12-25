@@ -49,6 +49,16 @@ def pwd(args):
 
 def get_history(args):
     try:
+        if args and args[0].startswith('-'):
+            if len(args) == 1:
+                return None, f"history: {args[0]}: option requires an argument\n"
+            file = args[1]
+            if args[0] == '-r':
+                readline.read_history_file(file)
+                return None, None
+            if args[0] == '-w':
+                readline.write_history_file(file)
+                return None, None
         n = int(args[0]) if args else 0
     except ValueError:
         return None, f"history: {args[0]}: numeric argument required\n"
