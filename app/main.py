@@ -4,6 +4,7 @@ import os
 import subprocess
 import signal
 import readline
+from dataclasses import dataclass
 
 from app.autocomplete import setup_autocomplete
 from app.constants import BUILTIN_NAMES
@@ -11,6 +12,11 @@ from app.tokenizer import tokenize
 from app.shell import Shell
 
 shell = Shell()
+
+@dataclass
+class CommandCursor:
+    cursor: int = 0
+
 def on_signal(signum, frame):
     shell.flush_history()
     sys.exit(0)
@@ -60,7 +66,8 @@ def get_history(args):
                 readline.write_history_file(file)
                 return None, None
             if args[0] == '-a':
-                readline.append_history_file(file)
+                readline.append_history_file(CommandCursor.cursor, file)
+                CommandCursor.cursor = 0
                 return None, None
         n = int(args[0]) if args else 0
     except ValueError:
@@ -230,6 +237,7 @@ def main():
             if not line:
                 continue
             readline.add_history(line)
+            CommandCursor.cursor += 1
             tokens = tokenize(line)
             parse(tokens)
     finally:
