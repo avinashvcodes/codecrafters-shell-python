@@ -233,7 +233,6 @@ def main():
             if not line:
                 continue
             readline.add_history(line)
-            CommandCursor.cursor += 1
             tokens = tokenize(line)
             parse(tokens)
     finally:
