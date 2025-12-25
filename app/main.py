@@ -213,10 +213,7 @@ def main():
     setup_autocomplete()
     try:
         while True:
-            sys.stdout.write("$ ")
-            sys.stdout.flush()
-
-            line = input().strip()
+            line = input("$ ").strip()
             if not line:
                 continue
             tokens = tokenize(line)
