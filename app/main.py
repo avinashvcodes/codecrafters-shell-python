@@ -208,7 +208,6 @@ def pipe(cmds):
     for pid in processes:
         os.waitpid(pid, 0)
 
-
 def main():
     setup_autocomplete()
     try:
