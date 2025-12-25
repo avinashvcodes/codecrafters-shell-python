@@ -60,7 +60,7 @@ class Shell:
         return self.trie
 
     def flush_history(self):
-        readline.write_history_file(history_file_path)
+        readline.append_history_file(readline.get_current_history_length() - Pointer.already_written, history_file_path)
 
     def get_history(self, n=0, width=5):
         length = readline.get_current_history_length()
