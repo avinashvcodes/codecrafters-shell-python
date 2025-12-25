@@ -1,9 +1,12 @@
 import os
+import readline
 from app.constants import BUILTIN_NAMES
 from app.trie import Trie
 
 history_file_path = os.path.expanduser("~/.pyshell_history")
 
+if os.path.exists(history_file_path):
+    readline.read_history_file(history_file_path)
 class Shell:
 
     __instance = None
@@ -54,22 +57,18 @@ class Shell:
         return self.trie
 
     def add_history(self, command: str):
-        self.history.append(command)
+        readline.add_history(command)
 
     def flush_history(self):
-        if not self.history:
-            return
-        with open(history_file_path, "a", encoding='utf-8') as f:
-            for command in self.history[self._history_start_index:]:
-                f.write(command + "\n")
-        self.history.clear()
+        readline.write_history_file(history_file_path)
 
     def get_history(self, n=0, width=5):
+        length = readline.get_current_history_length()
+        start = max(length-n+1, 1) if n > 0 else 0
+
         lines = []
-        total = len(self.history)
-        start = max(total-n, 0) if n > 0 else 0
-        while start < len(self.history):
-            command = self.history[start]
-            start+=1
-            lines.append(f"{start:>{width}}  {command}")
+        for i in range(start, length + 1):
+            cmd = readline.get_history_item(i)
+            lines.append(f"{i:>{width}}  {cmd}")
+
         return "\n".join(lines) + "\n"

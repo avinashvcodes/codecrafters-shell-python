@@ -50,7 +50,7 @@ def get_history(args):
     try:
         n = int(args[0]) if args else 0
     except ValueError:
-        return None, f"history: {n}: numeric argument required\n"
+        return None, f"history: {args[0]}: numeric argument required\n"
     return shell.get_history(n), None
 
 BUILTINS = {
