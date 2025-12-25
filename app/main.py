@@ -219,7 +219,6 @@ def main():
             line = input().strip()
             if not line:
                 continue
-            shell.add_history(line)
             tokens = tokenize(line)
             parse(tokens)
     finally:

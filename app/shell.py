@@ -46,19 +46,17 @@ class Shell:
                 self.trie.insert(cmd)
         return self.trie
 
-    def add_history(self, command: str):
-        readline.add_history(command)
-
     def flush_history(self):
         readline.write_history_file(history_file_path)
 
     def get_history(self, n=0, width=5):
         length = readline.get_current_history_length()
-        start = max(length-n+1, 1) if n > 0 else 0
+        start = max(length-n+1, 1) if n > 0 else 1
 
         lines = []
         for i in range(start, length + 1):
             cmd = readline.get_history_item(i)
-            lines.append(f"{i:>{width}}  {cmd}")
+            if cmd:
+                lines.append(f"{i:>{width}}  {cmd}")
 
         return "\n".join(lines) + "\n"
