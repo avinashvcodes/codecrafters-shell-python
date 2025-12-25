@@ -4,18 +4,14 @@ import os
 import subprocess
 import signal
 import readline
-from dataclasses import dataclass
 
 from app.autocomplete import setup_autocomplete
 from app.constants import BUILTIN_NAMES
 from app.tokenizer import tokenize
-from app.shell import Shell
+from app.shell import Shell, Pointer
 
+history_file_path = os.path.expanduser("~/.pyshell_history")
 shell = Shell()
-
-@dataclass
-class CommandCursor:
-    cursor: int = 0
 
 def on_signal(signum, frame):
     shell.flush_history()
@@ -56,18 +52,18 @@ def pwd(args):
 def get_history(args):
     try:
         if args and args[0].startswith('-'):
-            if len(args) == 1:
-                return None, f"history: {args[0]}: option requires an argument\n"
-            file = args[1]
+            file = args[1] if len(args) > 1 else history_file_path
             if args[0] == '-r':
-                readline.read_history_file(file)
+                if file != history_file_path:
+                    readline.read_history_file(file)
                 return None, None
             if args[0] == '-w':
                 readline.write_history_file(file)
+                Pointer.already_written = readline.get_current_history_length()
                 return None, None
             if args[0] == '-a':
-                readline.append_history_file(CommandCursor.cursor, file)
-                CommandCursor.cursor = 0
+                readline.append_history_file(readline.get_current_history_length() - Pointer.already_written, file)
+                Pointer.already_written = readline.get_current_history_length()
                 return None, None
         n = int(args[0]) if args else 0
     except ValueError:

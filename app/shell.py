@@ -1,5 +1,6 @@
 import os
 import readline
+from dataclasses import dataclass
 from app.constants import BUILTIN_NAMES
 from app.trie import Trie
 
@@ -8,6 +9,9 @@ history_file_path = os.path.expanduser("~/.pyshell_history")
 if os.path.exists(history_file_path):
     readline.read_history_file(history_file_path)
 
+@dataclass
+class Pointer:
+    already_written: int = readline.get_current_history_length()
 readline.set_auto_history(False)
 
 class Shell:
