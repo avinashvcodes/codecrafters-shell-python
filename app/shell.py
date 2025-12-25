@@ -23,16 +23,6 @@ class Shell:
 
         self._exec_cache = None
         self.trie = None
-        self.history = self.load_history()
-        self._history_start_index = len(self.history)
-
-    def load_history(self):
-        history = []
-        if os.path.exists(history_file_path):
-            with open(history_file_path, "r", encoding='utf-8') as f:
-                for line in f:
-                    history.append(line.strip("\n"))
-        return history
 
     def get_executables(self):
         if self._exec_cache is not None:
