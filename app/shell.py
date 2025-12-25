@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from app.constants import BUILTIN_NAMES
 from app.trie import Trie
 
-history_file_path = os.path.expanduser("~/.pyshell_history")
+HISTFILE = os.environ.get("HISTFILE")
+history_file_path = os.path.expanduser(HISTFILE)
 
 if os.path.exists(history_file_path):
     readline.read_history_file(history_file_path)

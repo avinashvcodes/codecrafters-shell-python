@@ -10,7 +10,8 @@ from app.constants import BUILTIN_NAMES
 from app.tokenizer import tokenize
 from app.shell import Shell, Pointer
 
-history_file_path = os.path.expanduser("~/.pyshell_history")
+HISTFILE = os.environ.get("HISTFILE")
+history_file_path = os.path.expanduser(HISTFILE)
 shell = Shell()
 
 def on_signal(signum, frame):
