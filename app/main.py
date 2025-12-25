@@ -3,6 +3,7 @@ import shutil
 import os
 import subprocess
 import signal
+import readline
 
 from app.autocomplete import setup_autocomplete
 from app.constants import BUILTIN_NAMES
@@ -215,6 +216,7 @@ def main():
             line = input("$ ").strip()
             if not line:
                 continue
+            readline.add_history(line)
             tokens = tokenize(line)
             parse(tokens)
     finally:

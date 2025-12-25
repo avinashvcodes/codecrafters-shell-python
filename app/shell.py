@@ -8,7 +8,7 @@ history_file_path = os.path.expanduser("~/.pyshell_history")
 if os.path.exists(history_file_path):
     readline.read_history_file(history_file_path)
 
-readline.set_auto_history(True)
+readline.set_auto_history(False)
 
 class Shell:
 
