@@ -5,6 +5,8 @@ from app.constants import BUILTIN_NAMES
 from app.trie import Trie
 
 HISTFILE = os.environ.get("HISTFILE")
+if HISTFILE is None:
+    HISTFILE = "~/.pyshell_history"
 history_file_path = os.path.expanduser(HISTFILE)
 
 if os.path.exists(history_file_path):

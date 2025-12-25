@@ -8,10 +8,8 @@ import readline
 from app.autocomplete import setup_autocomplete
 from app.constants import BUILTIN_NAMES
 from app.tokenizer import tokenize
-from app.shell import Shell, Pointer
+from app.shell import Shell, Pointer, history_file_path
 
-HISTFILE = os.environ.get("HISTFILE")
-history_file_path = os.path.expanduser(HISTFILE)
 shell = Shell()
 
 def on_signal(signum, frame):
