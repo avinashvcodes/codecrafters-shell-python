@@ -9,8 +9,11 @@ if HISTFILE is None:
     HISTFILE = "~/.pyshell_history"
 history_file_path = os.path.expanduser(HISTFILE)
 
-if os.path.exists(history_file_path):
-    readline.read_history_file(history_file_path)
+if os.path.exists(history_file_path) and os.path.isfile(history_file_path):
+    try:
+        readline.read_history_file(history_file_path)
+    except OSError:
+        pass
 
 @dataclass
 class Pointer:
